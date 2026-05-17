@@ -29,4 +29,6 @@ class AppColors {
   static const primaryButton = Color(0xffC4C0FF);
   static const secondaryButton = Color(0xff313030);
   static const invertedButton = Color(0xffE5E2E1);
+
+  static const cardPrimary = Color.fromARGB(255, 39, 38, 38);
 }
