@@ -11,8 +11,6 @@ class Usermodel {
 
   final String profilePictureUrl;
 
-  final String currency;
-
   Usermodel({
     required this.id,
     required this.name,
@@ -20,7 +18,6 @@ class Usermodel {
     required this.email,
     required this.isOnboardingCompleted,
     required this.profilePictureUrl,
-    required this.currency,
   });
 
   //FOR CONVERTING THE INCOMİNG JSON/FIRESSTORE DATA TO USERMODEL
@@ -32,7 +29,6 @@ class Usermodel {
       email: json['email'] as String,
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool,
       profilePictureUrl: json['profilePictureUrl'] as String,
-      currency: json['currency'] as String,
     );
   }
 
@@ -45,7 +41,6 @@ class Usermodel {
       "email": email,
       "isOnboardingCompleted": isOnboardingCompleted,
       "profilePictureUrl": profilePictureUrl,
-      "currency": currency,
     };
   }
 }
