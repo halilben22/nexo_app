@@ -11,10 +11,14 @@ class AuthService {
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
+      await _googleSignIn.initialize(
+        serverClientId:
+            "800901874318-pdqm8k38hfklqvapc0cstiqpal1uiji7.apps.googleusercontent.com",
+      );
       final GoogleSignInAccount? googleUser = await _googleSignIn
           .authenticate();
       if (googleUser == null) {
-        return null;
+        throw Exception("User cancelled sign in,null returned");
       }
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
@@ -25,8 +29,7 @@ class AuthService {
 
       return await _auth.signInWithCredential(credential);
     } catch (e) {
-      print('Error signing in with Google: $e');
-      return null;
+      throw Exception("Error signing in with Google: $e");
     }
   }
 

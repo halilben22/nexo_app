@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "800901874318-e68895tj0f7r06f4bapu23jd5fhadu7p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nexo_app",
+            "certificate_hash": "9c39bd10d54fb6bee69db130fcf47056054c53be"
+          }
+        },
+        {
           "client_id": "800901874318-pdqm8k38hfklqvapc0cstiqpal1uiji7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "800901874318-pdqm8k38hfklqvapc0cstiqpal1uiji7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "800901874318-bvrnli3im5bnnsbl54si14j5ob0m4tvs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nexoApp"
+              }
             }
           ]
         }

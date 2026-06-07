@@ -8,10 +8,6 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository loginRepository;
   LoginBloc({required this.loginRepository}) : super(LoginInitial()) {
-    on<LoginEvent>((event, emit) {
-      emit(LoginInitial());
-    });
-
     on<LoginWithGoogle>((event, emit) async {
       emit(LoginLoading());
       try {
