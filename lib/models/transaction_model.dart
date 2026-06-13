@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TransactionModel {
   final String id;
   final String accountid;
@@ -8,6 +10,10 @@ class TransactionModel {
 
   final DateTime date;
 
+  final DateTime createdAt;
+
+  final DateTime updatedAt;
+
   final bool isExpense;
   TransactionModel({
     required this.id,
@@ -16,6 +22,8 @@ class TransactionModel {
     required this.title,
     required this.category,
     required this.date,
+    required this.createdAt,
+    required this.updatedAt,
     required this.isExpense,
   });
 
@@ -28,6 +36,8 @@ class TransactionModel {
       category: json["category"] as String,
       date: DateTime.parse(json["date"] as String),
       isExpense: json["isExpense"] as bool,
+      createdAt: DateTime.parse(json["createdAt"] as String),
+      updatedAt: DateTime.parse(json["updatedAt"] as String),
     );
   }
 

@@ -10,14 +10,17 @@ class AccountModel {
   final String currency;
 
   final DateTime createdAt;
+  final DateTime updatedAt;
 
   AccountModel({
     required this.id,
     required this.name,
     required this.type,
+
     required this.balance,
     required this.currency,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
@@ -25,9 +28,11 @@ class AccountModel {
       id: json['id'] as String,
       name: json['name'] as String,
       type: json['type'] as AccountType,
+
       balance: (json['balance'] as num).toDouble(),
       currency: json['currency'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 
@@ -39,6 +44,7 @@ class AccountModel {
       "balance": balance,
       "currency": currency,
       "createdAt": createdAt,
+      "updatedAt": updatedAt,
     };
   }
 }
