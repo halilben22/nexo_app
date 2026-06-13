@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nexo_app/auth/auth_service.dart';
 
 import 'package:nexo_app/helper/helpers.dart';
 import 'package:nexo_app/models/account_model.dart';
 import 'package:nexo_app/models/transaction_model.dart';
+import 'package:nexo_app/repo/firebase_repo.dart';
 
 class HomeRepository {
   final _firestore = Helpers().firestore;
-  final transactions = Helpers().getCollection("transactions");
+  final firebaseRepo = FirebaseRepo(FirebaseFirestore.instance);
   final currentUser = AuthService().currentUser;
 
   Future<TransactionModel> getAllTransactionsForUser() async {
@@ -35,7 +37,8 @@ class HomeRepository {
     final startOfMonth = DateTime(now.year, now.month, 1);
     final startOfNextMonth = DateTime(now.year, now.month + 1, 1);
 
-    final snapshot = await transactions
+    final snapshot = await firebaseRepo
+        .getCollection("transactions")
         .where('userId', isEqualTo: currentUser?.uid)
         .where('date', isGreaterThanOrEqualTo: startOfMonth)
         .where('date', isLessThan: startOfNextMonth)
@@ -57,7 +60,8 @@ class HomeRepository {
     DateTime startDate,
     DateTime endDate,
   ) async {
-    final snapshot = await transactions
+    final snapshot = await firebaseRepo
+        .getCollection("transactions")
         .where("userId", isEqualTo: currentUser)
         .where("date", isGreaterThanOrEqualTo: startDate)
         .where("date", isLessThanOrEqualTo: endDate)
@@ -79,7 +83,8 @@ class HomeRepository {
     final startMonth = DateTime(now.year, now.month, 1);
     final endMonth = DateTime(now.year, now.month + 1, 1);
 
-    final snapshot = await transactions
+    final snapshot = await firebaseRepo
+        .getCollection("transactions")
         .where("userId", isEqualTo: currentUser)
         .where("date", isGreaterThanOrEqualTo: startMonth)
         .where("date", isLessThan: endMonth)
@@ -101,7 +106,8 @@ class HomeRepository {
     final startMonth = DateTime(now.year, now.month, 1);
     final endMonth = DateTime(now.year, now.month + 1, 1);
 
-    final snapshot = await transactions
+    final snapshot = await firebaseRepo
+        .getCollection("transactions")
         .where("userId", isEqualTo: currentUser)
         .where("date", isGreaterThanOrEqualTo: startMonth)
         .where("date", isLessThan: endMonth)
