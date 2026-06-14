@@ -1,33 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nexo_app/auth/auth_service.dart';
 
-import 'package:nexo_app/helper/helpers.dart';
 import 'package:nexo_app/models/account_model.dart';
 import 'package:nexo_app/models/transaction_model.dart';
 import 'package:nexo_app/repo/firebase_repo.dart';
 
 class HomeRepository {
-  final _firestore = Helpers().firestore;
-  final firebaseRepo = FirebaseRepo(FirebaseFirestore.instance);
-  final currentUser = AuthService().currentUser;
+  final AuthService authService;
+  final FirebaseRepo firebaseRepo;
+  User? get currentUser => authService.currentUser;
+  HomeRepository({required this.authService, required this.firebaseRepo});
 
   Future<TransactionModel> getAllTransactionsForUser() async {
-    final snapshot = await _firestore
-        .collection('transactions')
+    final snapshot = await firebaseRepo
+        .getCollection("transactions")
         .where('userId', isEqualTo: currentUser?.uid)
         .get();
+
     return TransactionModel.fromJson(snapshot.docs.first.data());
   }
 
   Future<double> getBalanceForUser() async {
-    final snapshot = await _firestore
-        .collection('accounts')
+    final snapshot = await firebaseRepo
+        .getCollection("accounts")
         .where('userId', isEqualTo: currentUser?.uid)
         .get();
 
-    AccountModel _model = AccountModel.fromJson(snapshot.docs.first.data());
+    AccountModel model = AccountModel.fromJson(snapshot.docs.first.data());
 
-    return _model.balance;
+    return model.balance;
   }
 
   //Brings the balance only for current month
@@ -62,7 +64,7 @@ class HomeRepository {
   ) async {
     final snapshot = await firebaseRepo
         .getCollection("transactions")
-        .where("userId", isEqualTo: currentUser)
+        .where("userId", isEqualTo: currentUser?.uid)
         .where("date", isGreaterThanOrEqualTo: startDate)
         .where("date", isLessThanOrEqualTo: endDate)
         .get();
@@ -85,7 +87,7 @@ class HomeRepository {
 
     final snapshot = await firebaseRepo
         .getCollection("transactions")
-        .where("userId", isEqualTo: currentUser)
+        .where("userId", isEqualTo: currentUser?.uid)
         .where("date", isGreaterThanOrEqualTo: startMonth)
         .where("date", isLessThan: endMonth)
         .get();
@@ -108,7 +110,7 @@ class HomeRepository {
 
     final snapshot = await firebaseRepo
         .getCollection("transactions")
-        .where("userId", isEqualTo: currentUser)
+        .where("userId", isEqualTo: currentUser?.uid)
         .where("date", isGreaterThanOrEqualTo: startMonth)
         .where("date", isLessThan: endMonth)
         .get();
@@ -121,6 +123,18 @@ class HomeRepository {
     }
 
     return total;
+  }
+
+  Future<void> addIncome(TransactionModel transaction_model) async {
+    try {
+      await firebaseRepo
+          .getCollection("users")
+          .doc(currentUser?.uid)
+          .collection("transactions")
+          .add(transaction_model.toJson());
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   //Aylık toplam gelir ve gider hesaplanacak.
