@@ -5,6 +5,11 @@ import 'package:nexo_app/core/theme/app_colors.dart';
 class AppTextStyles {
   AppTextStyles._();
 
+  static final heading1xl = GoogleFonts.inter(
+    fontSize: 48,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textPrimary,
+  );
   static final heading1 = GoogleFonts.inter(
     fontSize: 32,
     fontWeight: FontWeight.bold,

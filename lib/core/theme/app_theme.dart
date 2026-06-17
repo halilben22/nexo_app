@@ -12,18 +12,23 @@ class AppTheme {
     useMaterial3: true,
 
     scaffoldBackgroundColor: AppColors.background,
-    textTheme: GoogleFonts.interTextTheme(),
+    textTheme: GoogleFonts.interTextTheme(
+      ThemeData.dark().textTheme.apply(
+        bodyColor: AppColors.textPrimary,
+        displayColor: AppColors.textPrimary,
+      ),
+    ),
+
     colorScheme: ColorScheme.dark(
       primary: AppColors.primary,
       tertiary: AppColors.tertiary,
       secondary: AppColors.secondary,
       error: AppColors.error,
-    ),
-    primaryTextTheme: TextTheme(
-      displayLarge: AppTextStyles.heading1,
-      headlineLarge: AppTextStyles.heading2,
-      bodyMedium: AppTextStyles.body,
-      bodySmall: AppTextStyles.small,
+      surface: AppColors.background,
+      background: AppColors.background,
+      onBackground: AppColors.textPrimary,
+      onSurface: AppColors.textPrimary,
+      onPrimary: Colors.black,
     ),
 
     //APPBAR THEME OPSİONEL

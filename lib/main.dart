@@ -2,9 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nexo_app/core/theme/app_theme.dart';
+import 'package:nexo_app/feature/home/ui/add_new_transaction.dart';
 import 'package:nexo_app/feature/login/bloc/bloc/login_bloc.dart';
 import 'package:nexo_app/feature/login/repo/login_repo.dart';
-import 'package:nexo_app/feature/login/ui/login_screen.dart';
+
 import 'package:nexo_app/firebase_options.dart';
 
 void main() async {
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Nexo Finance App',
       theme: AppTheme.darkTheme,
-      home: const LoginScreen(),
+
+      home: const AddTransaction(),
     );
   }
 }
