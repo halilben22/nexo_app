@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nexo_app/components/home/category_card.dart';
 import 'package:nexo_app/components/home/date_card.dart';
+import 'package:nexo_app/components/home/note_card.dart';
+import 'package:nexo_app/components/home/save_button.dart';
 import 'package:nexo_app/core/theme/app_colors.dart';
 
 import 'package:nexo_app/core/theme/app_text_styles.dart';
@@ -18,6 +20,7 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransaction> {
   DateTime dateNow = DateTime.now();
+  int? selectedIndex;
   Future<void> pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -77,6 +80,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   Text("AMOUNT", style: AppTextStyles.caption),
                   IntrinsicWidth(
                     child: TextField(
+                      style: AppTextStyles.heading1xl,
                       showCursor: false,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -121,13 +125,24 @@ class _AddTransactionState extends State<AddTransaction> {
                     itemBuilder: (context, index) {
                       final category = categories[index];
 
-                      return CategoryCard(categories: category);
+                      return CategoryCard(
+                        categories: category,
+                        isSelected: selectedIndex == index,
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                      );
                     },
                   ),
 
-                  Container(
-                    child: DateCard(date: dateNow, onPressed: pickDate),
-                  ),
+                  DateCard(date: dateNow, onPressed: pickDate),
+                  SizedBox(height: 12),
+                  NoteCard(),
+
+                  SizedBox(height: 12),
+                  SaveButton(onPressed: () {}),
                 ],
               ),
             ),
