@@ -125,18 +125,6 @@ class HomeRepository {
     return total;
   }
 
-  Future<void> addIncome(TransactionModel transaction_model) async {
-    try {
-      await firebaseRepo
-          .getCollection("users")
-          .doc(currentUser?.uid)
-          .collection("transactions")
-          .add(transaction_model.toJson());
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
   //Aylık toplam gelir ve gider hesaplanacak.
   //Bu kısımdan sonra date filtrelemesi yapılacak. Yani modellerde
   // date ile alakalı kısımlar yeniden incelenecek.
