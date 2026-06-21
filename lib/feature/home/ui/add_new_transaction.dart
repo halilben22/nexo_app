@@ -1,15 +1,12 @@
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nexo_app/auth/auth_service.dart';
 import 'package:nexo_app/components/home/category_card.dart';
 import 'package:nexo_app/components/home/date_card.dart';
 import 'package:nexo_app/components/home/note_card.dart';
 import 'package:nexo_app/components/home/save_button.dart';
 import 'package:nexo_app/core/theme/app_colors.dart';
-
 import 'package:nexo_app/core/theme/app_text_styles.dart';
 import 'package:nexo_app/feature/transaction/bloc/bloc/transaction_bloc.dart';
 import 'package:nexo_app/models/categories.dart';
@@ -26,7 +23,10 @@ class _AddTransactionState extends State<AddTransaction> {
   DateTime dateNow = DateTime.now();
   bool isLoading = false;
   int? selectedIndex;
-  final TextEditingController _textEditingController=TextEditingController();
+  String note = "";
+  final TextEditingController _textEditingController = TextEditingController();
+  final AuthService _authService = AuthService();
+  bool isExpense = true;
 
   Future<void> pickDate() async {
     final DateTime? picked = await showDatePicker(
@@ -79,18 +79,19 @@ class _AddTransactionState extends State<AddTransaction> {
         listenWhen: (previous, current) => current is TransactionActionState,
         buildWhen: (previous, current) => current is! TransactionActionState,
         listener: (context, state) {
-          if (state is TransactionSuccessState) {
+          if (state is TransactionSuccessShowSnackbarActionState) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
-          if (state is TransactionErrorState) {
+          if (state is TransactionErrorShowSnackbarActionState) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
+          final isLoading = state is TransactionSavingState;
           return Column(
             children: [
               Padding(
@@ -104,22 +105,24 @@ class _AddTransactionState extends State<AddTransaction> {
                       IntrinsicWidth(
                         child: TextField(
                           controller: _textEditingController,
-                          onChanged: (value){
-                            _textEditingController.text=value;
-                          },
+
                           style: AppTextStyles.heading1xl,
                           showCursor: false,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9.,]'),
+                            ),
                           ],
+
                           cursorColor: AppColors.textPrimary,
                           decoration: InputDecoration(
+                            suffixText: " PLN",
                             fillColor: AppColors.background,
                             border: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
-                            hintText: "0.00 PLN",
+                            hintText: "0",
                             hintStyle: AppTextStyles.heading1xl,
                           ),
                         ),
@@ -138,9 +141,34 @@ class _AddTransactionState extends State<AddTransaction> {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Text("Category", style: AppTextStyles.heading2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
+                              "Category",
+                              style: AppTextStyles.heading2,
+                            ),
+                          ),
+
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(isExpense ? "Expense" : "Income"),
+                              const SizedBox(width: 8),
+                              Switch(
+                                activeThumbColor: AppColors.primaryButton,
+                                value: isExpense,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isExpense = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       GridView.builder(
                         shrinkWrap: true,
@@ -168,17 +196,34 @@ class _AddTransactionState extends State<AddTransaction> {
 
                       DateCard(date: dateNow, onPressed: pickDate),
                       SizedBox(height: 12),
-                      NoteCard(),
+                      NoteCard(
+                        onChange: (p0) {
+                          note = p0;
+                        },
+                      ),
 
                       SizedBox(height: 12),
                       SaveButton(
                         onPressed: () {
+                          TransactionModel transactionModel = TransactionModel(
+                            amount: double.parse(_textEditingController.text),
+                            accountid: _authService.currentUser!.uid,
+                            id: "",
+                            title: note,
+                            category: categories[selectedIndex!].name,
+                            date: dateNow,
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                            isExpense: isExpense,
+                          );
 
-                        TransactionModel transactionModel=TransactionModel(amount:double.parse(_textEditingController.text), title: )
-
-                          context.read<TransactionBloc>().add(TransactionSaveEvent(transactionModel:transactionModel ));
+                          context.read<TransactionBloc>().add(
+                            TransactionSaveEvent(
+                              transactionModel: transactionModel,
+                            ),
+                          );
                         },
-                        isLoading: state is TransactionSavingState,
+                        isLoading: isLoading,
                       ),
                     ],
                   ),

@@ -7,6 +7,7 @@ import 'package:nexo_app/core/theme/app_theme.dart';
 import 'package:nexo_app/feature/home/ui/add_new_transaction.dart';
 import 'package:nexo_app/feature/login/bloc/bloc/login_bloc.dart';
 import 'package:nexo_app/feature/login/repo/login_repo.dart';
+import 'package:nexo_app/feature/login/ui/login_screen.dart';
 import 'package:nexo_app/feature/transaction/bloc/bloc/transaction_bloc.dart';
 import 'package:nexo_app/feature/transaction/repo/transaction_repo.dart';
 
@@ -32,7 +33,8 @@ void main() async {
               LoginBloc(loginRepository: loginRepository),
         ),
         BlocProvider(
-          create: (BuildContext context) => TransactionBloc(transactionRepo),
+          create: (BuildContext context) =>
+              TransactionBloc(transactionRepo, firebaseRepo),
         ),
       ],
       child: const MyApp(),
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
       title: 'Nexo Finance App',
       theme: AppTheme.darkTheme,
 
-      home: const AddTransaction(),
+      home: const LoginScreen(),
     );
   }
 }

@@ -19,18 +19,20 @@ class _SaveButtonState extends State<SaveButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+      onPressed: widget.onPressed,
       child: widget.isLoading
           ? CircularProgressIndicator()
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.done_sharp,
-                  color: AppColors.invertedButton,
-                  size: 24,
+                Icon(Icons.done_sharp, color: AppColors.textPrimary, size: 24),
+                Text(
+                  "Save Transaction",
+                  style: AppTextStyles.heading2.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-                Text("Save Transaction", style: AppTextStyles.heading2),
               ],
             ),
     );

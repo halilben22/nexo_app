@@ -52,4 +52,28 @@ class TransactionModel {
       "isExpense": isExpense,
     };
   }
+
+  TransactionModel copyWith({
+    String? id,
+    String? accountid,
+    double? amount,
+    String? title,
+    String? category,
+    DateTime? date,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isExpense,
+  }) {
+    return TransactionModel(
+      id: id ?? this.id,
+      accountid: accountid ?? this.accountid,
+      amount: amount ?? this.amount,
+      title: title ?? this.title,
+      category: category ?? this.category,
+      date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isExpense: isExpense ?? this.isExpense,
+    );
+  }
 }

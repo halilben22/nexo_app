@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NoteCard extends StatefulWidget {
-  const NoteCard({super.key});
+  final Function(String) onChange;
+  const NoteCard({super.key, required this.onChange});
 
   @override
   State<NoteCard> createState() => _NoteCardState();
@@ -34,6 +35,7 @@ class _NoteCardState extends State<NoteCard> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: TextField(
+                  onChanged: widget.onChange,
                   maxLength: null,
                   maxLines: null,
                   expands: true,
